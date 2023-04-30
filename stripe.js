@@ -1,21 +1,27 @@
 const stripe = require('stripe')
 
-const STRIPE_SECRET_KEY = 'sk_test_51KI6TUDc3BrvOiQJbnAX24iKFBWjHesknYUotz78o4TVb0JsZcxTT48KP7vhHwrs9tD9Kcb4MwRWYZpfWW3NPfSr007b69k2VO'
+const STRIPE_SECRET_KEY = 'sk_test_51MyfjgDNpVqGNHpW9graqNKzzubfzGPrmjLIiH7dFWY6JDM1O5qzRzPSfM8a1kIMiwmwUVTpJof0lqgsYrbjrem4009F46IHfo'
 
 const Stripe = stripe(STRIPE_SECRET_KEY, {
     apiVersion: '2020-08-27'
 })
 
-const addNewCustomer = async (email) => {
+const addNewCustomer = async (email, name) => {
     const customer = await Stripe.customers.create({
-        email,
-        description: 'New Customer'
+        email: email,
+        name: name,
+        description: name
     })
     return customer;
 }
 
-const getCustomerByID = async (id) => {
+const getCustomerById = async (id) => {
     const customer = await Stripe.customers.retrieve(id)
+    return customer
+}
+
+const getCustomerByEmail = async (email) => {
+    const customer = await Stripe.customers.list({ email: email })
     return customer
 }
 
@@ -43,6 +49,7 @@ const createCheckoutSession = async (customer, price) => {
 
 module.exports = {
     addNewCustomer,
-    getCustomerByID,
+    getCustomerById,
+    getCustomerByEmail,
     createCheckoutSession
 }
